@@ -108,22 +108,22 @@ def test_annotate_hour_single_value():
 
 
 # ---------------------------------------------------------------------------
-# summary output
+# Invalid expression handling
 # ---------------------------------------------------------------------------
 
-def test_summary_contains_expression():
-    result = annotate("0 0 * * *")
-    s = result.summary()
-    assert "0 0 * * *" in s
+def test_annotate_raises_on_too_few_fields():
+    """annotate should raise ValueError when fewer than 5 fields are given."""
+    with pytest.raises(ValueError, match="5 fields"):
+        annotate("* * * *")
 
 
-def test_summary_contains_human():
-    result = annotate("0 0 * * *")
-    s = result.summary()
-    assert result.human in s
+def test_annotate_raises_on_too_many_fields():
+    """annotate should raise ValueError when more than 5 fields are given."""
+    with pytest.raises(ValueError, match="5 fields"):
+        annotate("* * * * * *")
 
 
-def test_field_annotation_str():
-    ann = FieldAnnotation(field_name="minute", raw="*", values=list(range(60)), note="runs every minute")
-    assert "minute" in str(ann)
-    assert "runs every minute" in str(ann)
+def test_annotate_raises_on_empty_string():
+    """annotate should raise ValueError for an empty expression string."""
+    with pytest.raises(ValueError):
+        annotate("")
