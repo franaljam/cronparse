@@ -31,6 +31,11 @@ def _cmd_alias(args: argparse.Namespace) -> None:
 
 
 def _cmd_resolve(args: argparse.Namespace) -> None:
+    """Resolve a single @-alias and print the result.
+
+    Prints a human-readable message indicating whether *expression* was
+    recognised as an alias.  Exits with status 1 if the alias is invalid.
+    """
     try:
         result = resolve(args.expression)
         if result == args.expression:
@@ -43,7 +48,11 @@ def _cmd_resolve(args: argparse.Namespace) -> None:
 
 
 def _cmd_list(_args: argparse.Namespace) -> None:
+    """Print a formatted table of all known @-aliases and their expansions."""
     aliases = list_aliases()
+    if not aliases:
+        print("No aliases defined.")
+        return
     width = max(len(k) for k in aliases)
     print(f"{'Alias':<{width}}  Expression")
     print("-" * (width + 14))
