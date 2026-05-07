@@ -103,3 +103,11 @@ def test_min_max_values_for_specific():
     minute = report.fields[0]
     assert minute.min_value == 5
     assert minute.max_value == 5
+
+
+def test_field_names_are_correct():
+    """Verify that fields are assigned the correct names in order."""
+    report = inspect("* * * * *")
+    expected_names = ["minute", "hour", "dom", "month", "dow"]
+    actual_names = [f.name for f in report.fields]
+    assert actual_names == expected_names
