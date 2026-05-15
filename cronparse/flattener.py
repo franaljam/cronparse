@@ -19,6 +19,14 @@ class FlattenResult:
         """Number of distinct firing times within a single day."""
         return len(self.times)
 
+    def first(self) -> Optional[Tuple[int, int]]:
+        """Return the first (hour, minute) firing time of the day, or None if empty."""
+        return self.times[0] if self.times else None
+
+    def last(self) -> Optional[Tuple[int, int]]:
+        """Return the last (hour, minute) firing time of the day, or None if empty."""
+        return self.times[-1] if self.times else None
+
     def __str__(self) -> str:  # pragma: no cover
         label_part = f" ({self.label})" if self.label else ""
         return (
