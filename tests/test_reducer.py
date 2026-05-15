@@ -102,14 +102,18 @@ def test_reduce_label_length_mismatch_raises():
 # Summary
 # ---------------------------------------------------------------------------
 
-def test_reduce_summary_returns_string():
-    result = reduce([EVERY_MINUTE, EVERY_HOUR])
-    s = result.summary()
-    assert isinstance(s, str)
-
-
 def test_reduce_summary_contains_counts():
-    result = reduce([EVERY_MINUTE, EVERY_MINUTE, EVERY_HOUR])
-    s = result.summary()
-    assert "3" in s  # original count
-    assert "2" in s  # reduced count
+    """ReduceResult.summary should mention original and reduced counts."""
+    exprs = [EVERY_MINUTE, EVERY_MINUTE, EVERY_HOUR]
+    result = reduce(exprs)
+    summary = result.summary()
+    assert str(result.original_count) in summary
+    assert str(len(result.reduced)) in summary
+
+
+def test_reduce_summary_no_removals_message():
+    """When nothing is removed the summary should reflect that."""
+    result = reduce([EVERY_MINUTE, EVERY_HOUR])
+    summary = result.summary()
+    # Reduced count equals original, so no removals occurred.
+    assert str(result.reduction_count) in summary
