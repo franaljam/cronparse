@@ -44,6 +44,14 @@ class TraceResult:
             lines.append(f"  {step}")
         return "\n".join(lines)
 
+    def first(self) -> Optional[TraceStep]:
+        """Return the first traced step, or None if there are no steps."""
+        return self.steps[0] if self.steps else None
+
+    def last(self) -> Optional[TraceStep]:
+        """Return the last traced step, or None if there are no steps."""
+        return self.steps[-1] if self.steps else None
+
 
 def trace(
     expression: str,
@@ -54,6 +62,16 @@ def trace(
     """Trace the next *n* runs of *expression* from *start*.
 
     Each step records which concrete value of each cron field was satisfied.
+
+    Args:
+        expression: A cron expression string (e.g. ``"*/5 * * * *"``).
+        start: The datetime from which to begin iterating runs.
+        n: Maximum number of runs to trace. Defaults to 5.
+        label: Optional human-readable label attached to every step and the
+            result, useful when tracing multiple expressions side-by-side.
+
+    Returns:
+        A :class:`TraceResult` containing up to *n* :class:`TraceStep` objects.
     """
     expr: CronExpression = parse(expression)
     result = TraceResult(expression=expression, label=label)
